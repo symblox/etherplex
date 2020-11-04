@@ -10,8 +10,8 @@ export class Context {
   ) {}
 
   call (to: string, fd: FunctionDescription, data: Arrayish) {
-    let resolveCb: Function
-    let rejectCb: Function
+    let resolveCb: Function = ()=>{};
+    let rejectCb: Function = ()=>{};
 
     const promise = new Promise((resolve, reject) => {
       resolveCb = resolve
@@ -76,7 +76,7 @@ export class MulticallContract {
   }
 
   addPrototypeFunction(fd) {
-    let callback = function (...params) {
+    let callback = function (this: Context,...params) {
       let data = fd.encode(params)
       this.call(this.contract.__address, fd, data)
       return this
